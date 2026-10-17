@@ -1,0 +1,42 @@
+// A tiny physics step, the kind of loop that runs every frame in a game.
+
+struct Vec2 {
+    x: f64,
+    y: f64,
+}
+
+struct Particle {
+    pos: Vec2,
+    vel: Vec2,
+}
+
+fn add(a: Vec2, b: Vec2) -> Vec2 {
+    return Vec2 { x: a.x + b.x, y: a.y + b.y }
+}
+
+fn scale(v: Vec2, s: f64) -> Vec2 {
+    return Vec2 { x: v.x * s, y: v.y * s }
+}
+
+fn step(p: Particle, dt: f64) -> Particle {
+    let gravity = Vec2 { x: 0.0, y: -9.81 }
+    var vel = add(p.vel, scale(gravity, dt))
+    var pos = add(p.pos, scale(vel, dt))
+    // Bounce on the floor and lose some energy.
+    if pos.y < 0.0 {
+        pos.y = -pos.y
+        vel.y = -vel.y * 0.8
+    }
+    return Particle { pos: pos, vel: vel }
+}
+
+fn main() {
+    var p = Particle { pos: Vec2 { x: 0.0, y: 10.0 }, vel: Vec2 { x: 2.0, y: 0.0 } }
+    let dt = 0.01
+    for frame in 0..300 {
+        p = step(p, dt)
+        if frame % 60 == 0 {
+            print("frame", frame, "x", p.pos.x, "y", p.pos.y)
+        }
+    }
+}

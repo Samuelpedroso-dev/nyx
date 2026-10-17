@@ -1,0 +1,43 @@
+// Bit level work with fixed width integers.
+
+// Count the set bits using the classic x & (x - 1) trick.
+fn popcount(x: u64) -> i32 {
+    var v = x
+    var count: i32 = 0
+    while v != 0 {
+        v &= v - 1
+        count += 1
+    }
+    return count
+}
+
+// Reverse the bits of a byte.
+fn reverse_byte(b: u8) -> u8 {
+    var v = b
+    var r: u8 = 0
+    for i in 0..8 {
+        r = (r << 1) | (v & 1)
+        v >>= 1
+    }
+    return r
+}
+
+// Pack four bytes into a single u32, the way a color or a pixel is stored.
+fn pack_rgba(r: u8, g: u8, b: u8, a: u8) -> u32 {
+    return (r as u32 << 24) | (g as u32 << 16) | (b as u32 << 8) | a as u32
+}
+
+fn main() {
+    print("popcount 0xFF =", popcount(0xFF))
+    print("popcount 0b1011_0001 =", popcount(0b1011_0001))
+    print("reverse 0b0000_0001 =", reverse_byte(0b0000_0001))
+    print("reverse 0b1100_0000 =", reverse_byte(0b1100_0000))
+
+    let color = pack_rgba(255, 128, 0, 255)
+    print("packed color =", color)
+    print("green channel =", (color >> 16) & 0xFF)
+
+    let flags: u8 = 0b0000_0101
+    print("bit 2 set?", (flags & 0b100) != 0)
+    print("bit 1 set?", (flags & 0b010) != 0)
+}

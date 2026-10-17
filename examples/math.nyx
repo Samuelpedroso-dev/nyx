@@ -1,0 +1,14 @@
+// Calling C directly. Any C function can be declared with extern.
+extern fn sqrt(x: f64) -> f64
+extern fn pow(base: f64, exp: f64) -> f64
+
+fn hypot(a: f64, b: f64) -> f64 {
+    return sqrt(a * a + b * b)
+}
+
+fn main() {
+    print("hypot 3 4 =", hypot(3.0, 4.0))
+    print("2 to the 10 =", pow(2.0, 10.0))
+    let x: i32 = 7
+    print("7 as f64 / 2 =", x as f64 / 2.0)
+}

@@ -1,0 +1,14 @@
+// Recursive Fibonacci, a classic benchmark for function call speed.
+fn fib(n: i64) -> i64 {
+    if n < 2 {
+        return n
+    }
+    return fib(n - 1) + fib(n - 2)
+}
+
+fn main() {
+    for i in 0..10 {
+        print("fib", i, "=", fib(i))
+    }
+    print("fib 35 =", fib(35))
+}
