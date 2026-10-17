@@ -1,36 +1,44 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:58A6FF,100:A371F7&height=170&section=header&text=Nyx&fontSize=72&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=A%20small%20systems%20language%20that%20compiles%20to%20C&descAlignY=62&descSize=17" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:58A6FF,100:A371F7&height=170&section=header&text=Nyx&fontSize=72&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=A%20fast%2C%20strict%20systems%20language%20that%20compiles%20to%20C&descAlignY=62&descSize=17" width="100%" />
 
-<img src="https://img.shields.io/badge/version-0.1.0-A371F7?style=for-the-badge&labelColor=161b22" />
-<img src="https://img.shields.io/badge/compiles%20to-C99-58A6FF?style=for-the-badge&labelColor=161b22" />
-<img src="https://img.shields.io/badge/tests-23%20passing-3FB950?style=for-the-badge&labelColor=161b22" />
+<img src="https://img.shields.io/badge/version-0.2.0-A371F7?style=for-the-badge&labelColor=161b22" />
+<img src="https://img.shields.io/badge/compiles%20to-C11-58A6FF?style=for-the-badge&labelColor=161b22" />
+<img src="https://img.shields.io/badge/tests-40%20passing-3FB950?style=for-the-badge&labelColor=161b22" />
 <img src="https://img.shields.io/badge/license-MIT-c9d1d9?style=for-the-badge&labelColor=161b22" />
 
 </div>
 
 <br/>
 
-Nyx is a statically typed, low level programming language built for speed. It compiles to plain C and then to a native executable, so your code runs at C speed with a cleaner syntax, strict types and safety checks the C compiler would never give you.
+Nyx is a statically typed programming language built for speed. It compiles to plain C and then to a native executable, so your code runs at C speed with a clean syntax, strict types and safety checks the C compiler would never give you.
 
-The long term goal is a language for games and AI workloads, with control down to the bit and tight integration with AI tooling. Version 0.1 is the foundation.
+The long term goal is a language for games and AI workloads, with control down to the bit and tight integration with AI tooling.
 
 ```rust
-struct Vec2 {
-    x: f64,
-    y: f64,
+import "random"
+
+struct Fighter {
+    name: str,
+    hp: i64,
 }
 
-fn add(a: Vec2, b: Vec2) -> Vec2 {
-    return Vec2 { x: a.x + b.x, y: a.y + b.y }
+impl Fighter {
+    fn take(var self, damage: i64) {
+        self.hp -= damage
+    }
 }
 
 fn main() {
-    var pos = Vec2 { x: 0.0, y: 10.0 }
-    let vel = Vec2 { x: 2.0, y: -1.0 }
-    for frame in 0..3 {
-        pos = add(pos, vel)
-        print("frame", frame, "x", pos.x, "y", pos.y)
+    var rng = Rng.new(42)
+    var party: [Fighter] = [Fighter { name: "Nyx", hp: 100 }, Fighter { name: "Vega", hp: 80 }]
+    party.push(Fighter { name: "Orion", hp: 120 })
+
+    for i in 0..party.len() {
+        party[i].take(rng.range(5, 20))
+    }
+    for f in party {
+        print(f.name + " has " + str(f.hp) + " hp")
     }
 }
 ```
@@ -44,32 +52,38 @@ fn main() {
 <td width="50%" valign="top">
 
 **⚡ Native speed**<br/>
-Nyx compiles through C with full optimizations. Recursive `fib(35)` runs about **60x faster** than the same code in Python.
+Nyx compiles through C with full optimizations. Recursive `fib(35)` runs about **60x faster** than Python and list processing about **28x faster**.
 
 **🧱 Bit level control**<br/>
 Fixed width integers from `i8` to `u64`, hex and binary literals, and the full set of bitwise operators.
 
 **🔒 Strict by default**<br/>
-Variables are immutable unless declared with `var`. No silent conversions between types. Missing returns are compile errors.
+Variables are immutable unless declared with `var`. No silent conversions. Methods must say `var self` to change their struct.
+
+**🧩 Modern building blocks**<br/>
+Real strings, growable lists, structs with methods, `for each` loops and modules.
 
 </td>
 <td width="50%" valign="top">
 
-**🛡️ Safe arrays**<br/>
-Every array access is bounds checked. An out of range index stops the program with a clear message instead of corrupting memory.
+**🛡️ Safe by design**<br/>
+Every array, list and string access is bounds checked. Popping an empty list or slicing past the end stops with a clear message instead of corrupting memory.
 
 **🔌 Direct C interop**<br/>
 Declare any C function with `extern fn` and call it. The whole C ecosystem is available from day one.
 
+**📦 Standard library**<br/>
+`math`, `random` and `strings` modules, written in Nyx itself.
+
 **💬 Clear errors**<br/>
-Errors point at the exact line and column and tell you how to fix the problem.
+Errors point at the exact file, line and column and tell you how to fix the problem.
 
 </td>
 </tr>
 </table>
 
 ```
-speed.nyx:3:5: error: cannot assign to 'speed', declare it with 'var' to make it mutable
+game.nyx:3:5: error: cannot modify 'speed', declare it with 'var' to make it mutable
      3 |     speed = 20
        |     ^
 ```
@@ -108,25 +122,52 @@ var score = 0             // i64 by default
 score += 5
 ```
 
-**Types.** `i8` `i16` `i32` `i64` `u8` `u16` `u32` `u64` `f32` `f64` `bool` `str`, fixed size arrays `[T; N]` and structs. Convert between numeric types with `as`.
+**Types.** `i8` `i16` `i32` `i64` `u8` `u16` `u32` `u64` `f32` `f64` `bool` `str`, fixed arrays `[T; N]`, growable lists `[T]` and structs. Convert numbers with `as`, turn anything into text with `str(x)`.
 
 ```rust
 let ratio = count as f64 / 3.0
 let mask: u8 = 0b1010_0101
-let big: u64 = 0xFFFF_FFFF
+let label = "score " + str(score)
 ```
 
-**Functions.** Can be called before they are defined.
+**Strings.** Concatenate with `+`, compare with `==` and `<`, index bytes, slice and search.
 
 ```rust
-fn clamp(x: i64, lo: i64, hi: i64) -> i64 {
-    if x < lo { return lo }
-    if x > hi { return hi }
-    return x
-}
+let msg = "Hello, " + name
+print(msg.len(), msg.contains("Nyx"), msg.find(","), msg.substr(0, 5))
+for c in "abc" { print(chr(c)) }
 ```
 
-**Control flow.** `if` and `else if`, `while`, ranges with `for`, `break` and `continue`.
+**Lists.** Grow with `push`, shrink with `pop` and `remove`, iterate with `for`.
+
+```rust
+var xs: [i64] = []
+xs.push(10)
+xs.push(20)
+xs[0] = 5
+let last = xs.pop()
+for x in xs { print(x) }
+print(xs)                 // [5]
+```
+
+**Structs and methods.** `self` reads a copy, `var self` changes the original, functions without `self` are called on the type.
+
+```rust
+struct Vec2 { x: f64, y: f64 }
+
+impl Vec2 {
+    fn new(x: f64, y: f64) -> Vec2 { return Vec2 { x: x, y: y } }
+    fn length(self) -> f64 { return sqrt(self.x * self.x + self.y * self.y) }
+    fn scale(var self, k: f64) { self.x *= k
+                                 self.y *= k }
+}
+
+var v = Vec2.new(3.0, 4.0)
+v.scale(2.0)
+print(v)                  // Vec2 { x: 6, y: 8 }
+```
+
+**Control flow.** `if` and `else if`, `while`, ranges and `for each`, `break` and `continue`.
 
 ```rust
 for i in 0..10 {
@@ -135,23 +176,30 @@ for i in 0..10 {
 }
 ```
 
-**Arrays.** Fixed size, passed by value, bounds checked.
+**Modules.** Import the standard library by name or your own files by path.
 
 ```rust
-var grid = [0; 64]        // 64 zeros
-grid[3] = 7
-print(len(grid))          // 64
+import "math"            // lib/math.nyx
+import "utils.nyx"       // next to this file
 ```
 
 **C interop.**
 
 ```rust
-extern fn sqrt(x: f64) -> f64
-
-fn main() {
-    print(sqrt(2.0))
-}
+extern fn puts(s: str) -> i32
 ```
+
+<br/>
+
+## ◆ Standard Library
+
+| Module | Contents |
+|:--|:--|
+| [`math`](lib/math.nyx) | `sqrt` `sin` `cos` `pow` `floor` and friends, `pi` `min` `max` `clamp` `lerp`, integer versions |
+| [`random`](lib/random.nyx) | `Rng` with `next` `range` `float` `chance`, deterministic for a given seed |
+| [`strings`](lib/strings.nyx) | `split` `join` `trim` `repeat` `to_upper` `to_lower` `starts_with` `ends_with` |
+
+Built in everywhere are `print` `str` `len` `push` `pop` `remove` `clear` `substr` `contains` `find` `chr` `read_line` `parse_int` `parse_float` `time_ms` and `exit`.
 
 <br/>
 
@@ -160,11 +208,15 @@ fn main() {
 | File | Shows |
 |:--|:--|
 | [`hello.nyx`](examples/hello.nyx) | The first program |
-| [`fib.nyx`](examples/fib.nyx) | Recursion and loops |
+| [`arena.nyx`](examples/arena.nyx) | A small game simulation using everything together |
+| [`methods.nyx`](examples/methods.nyx) | Structs with methods and `var self` |
+| [`lists.nyx`](examples/lists.nyx) | Growable lists of numbers and structs |
+| [`strings.nyx`](examples/strings.nyx) | String building and the strings module |
 | [`bits.nyx`](examples/bits.nyx) | Popcount, bit reversal, RGBA packing |
-| [`particles.nyx`](examples/particles.nyx) | Structs and a game style physics step |
-| [`sieve.nyx`](examples/sieve.nyx) | Arrays and the Sieve of Eratosthenes |
-| [`math.nyx`](examples/math.nyx) | Calling C math functions |
+| [`particles.nyx`](examples/particles.nyx) | A game style physics step |
+| [`sieve.nyx`](examples/sieve.nyx) | Fixed arrays and the Sieve of Eratosthenes |
+| [`fib.nyx`](examples/fib.nyx) | Recursion and loops |
+| [`math.nyx`](examples/math.nyx) | Calling C functions directly |
 
 <br/>
 
@@ -174,7 +226,7 @@ fn main() {
 source.nyx ──► lexer ──► parser ──► type checker ──► C code ──► gcc / clang ──► native binary
 ```
 
-The whole compiler lives in [`nyx.py`](nyx.py), about 1300 lines of Python with no dependencies. Each stage is a small, readable class, which makes the project a good place to learn how compilers work.
+The whole compiler lives in [`nyx.py`](nyx.py), under 2000 lines of Python with no dependencies. Each stage is a small, readable class, which makes the project a good place to learn how compilers work.
 
 <br/>
 
@@ -184,28 +236,29 @@ The whole compiler lives in [`nyx.py`](nyx.py), about 1300 lines of Python with 
 python3 tests/run_tests.py
 ```
 
-The suite runs every example against its expected output, checks that 16 kinds of invalid programs are rejected with the right message, and verifies the runtime bounds check.
+The suite runs all 10 examples against their expected output, checks that 26 kinds of invalid programs are rejected with the right message, and verifies 4 runtime safety checks. The generated C is also checked with AddressSanitizer and UndefinedBehaviorSanitizer.
 
 <br/>
 
 ## ◆ Benchmark
 
-Recursive `fib(35)`, median of several runs, Intel Xeon 2.1 GHz.
+Median of several runs on an Intel Xeon 2.1 GHz, gcc -O2.
 
-| Language | Time |
-|:--|--:|
-| **Nyx 0.1** (gcc -O2) | **0.02 s** |
-| Python 3.13 | 1.19 s |
+| Task | Nyx 0.2 | Python 3.13 | Speedup |
+|:--|--:|--:|--:|
+| Recursive `fib(35)` | 0.02 s | 1.19 s | ~60x |
+| Push and sum 10 million list items | 0.06 s | 1.65 s | ~28x |
 
-This measures function call speed. Results vary with the machine and the C compiler.
+Results vary with the machine and the C compiler.
 
 <br/>
 
 ## ◆ Roadmap
 
 <table>
-<tr><td>◆</td><td>Dynamic arrays, slices and a standard library</td></tr>
-<tr><td>◆</td><td>Generics and methods on structs</td></tr>
+<tr><td>◆</td><td>Automatic memory management, so long running programs release what they no longer use</td></tr>
+<tr><td>◆</td><td>Hash maps and generics</td></tr>
+<tr><td>◆</td><td>Enums and pattern matching</td></tr>
 <tr><td>◆</td><td>SIMD types for game and AI math</td></tr>
 <tr><td>◆</td><td>Direct native code generation through LLVM</td></tr>
 <tr><td>◆</td><td>AI assisted tooling built into the compiler</td></tr>
@@ -216,7 +269,9 @@ This measures function call speed. Results vary with the machine and the C compi
 
 ## ◆ Status
 
-Nyx 0.1 is an early release. The core language works and is tested, but there is no heap allocation, no strings beyond literals and no modules yet. Expect breaking changes before 1.0. Issues and ideas are welcome.
+Nyx 0.2 is an early release. The core language is complete enough for tools, simulations and small games, and every feature above is tested.
+
+One important limit today: memory used by strings and lists is only released when the program exits. That is fine for scripts, tools and simulations, but a program that builds new strings every frame for hours will keep growing. Automatic memory management is the next milestone. Expect breaking changes before 1.0. Issues and ideas are welcome.
 
 <br/>
 
