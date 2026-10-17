@@ -1,0 +1,89 @@
+// Nyx standard library, strings module.
+// import "strings"
+
+// Split s every time sep appears.
+fn split(s: str, sep: str) -> [str] {
+    if sep.len() == 0 {
+        return [s]
+    }
+    var parts: [str] = []
+    var rest = s
+    while true {
+        let i = rest.find(sep)
+        if i < 0 {
+            parts.push(rest)
+            return parts
+        }
+        parts.push(rest.substr(0, i))
+        rest = rest.substr(i + sep.len(), rest.len())
+    }
+}
+
+// Join parts into one string with sep between them.
+fn join(parts: [str], sep: str) -> str {
+    var out = ""
+    for i in 0..parts.len() {
+        if i > 0 {
+            out += sep
+        }
+        out += parts[i]
+    }
+    return out
+}
+
+fn repeat(s: str, n: i64) -> str {
+    var out = ""
+    for i in 0..n {
+        out += s
+    }
+    return out
+}
+
+fn to_upper(s: str) -> str {
+    var out = ""
+    for c in s {
+        if c >= 97 && c <= 122 {
+            out += chr(c - 32)
+        } else {
+            out += chr(c)
+        }
+    }
+    return out
+}
+
+fn to_lower(s: str) -> str {
+    var out = ""
+    for c in s {
+        if c >= 65 && c <= 90 {
+            out += chr(c + 32)
+        } else {
+            out += chr(c)
+        }
+    }
+    return out
+}
+
+fn is_space(c: u8) -> bool {
+    return c == 32 || c == 9 || c == 10 || c == 13
+}
+
+// Remove spaces from both ends.
+fn trim(s: str) -> str {
+    var a: i64 = 0
+    var b = s.len()
+    while a < b && is_space(s[a]) {
+        a += 1
+    }
+    while b > a && is_space(s[b - 1]) {
+        b -= 1
+    }
+    return s.substr(a, b)
+}
+
+fn starts_with(s: str, prefix: str) -> bool {
+    return s.len() >= prefix.len() && s.substr(0, prefix.len()) == prefix
+}
+
+fn ends_with(s: str, suffix: str) -> bool {
+    return s.len() >= suffix.len() && s.substr(s.len() - suffix.len(), s.len()) == suffix
+}

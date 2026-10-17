@@ -1,0 +1,56 @@
+// Nyx standard library, math module.
+// import "math"
+
+extern fn sqrt(x: f64) -> f64
+extern fn sin(x: f64) -> f64
+extern fn cos(x: f64) -> f64
+extern fn tan(x: f64) -> f64
+extern fn atan2(y: f64, x: f64) -> f64
+extern fn pow(base: f64, exp: f64) -> f64
+extern fn exp(x: f64) -> f64
+extern fn log(x: f64) -> f64
+extern fn floor(x: f64) -> f64
+extern fn ceil(x: f64) -> f64
+extern fn fabs(x: f64) -> f64
+
+fn pi() -> f64 {
+    return 3.141592653589793
+}
+
+fn min(a: f64, b: f64) -> f64 {
+    if a < b { return a }
+    return b
+}
+
+fn max(a: f64, b: f64) -> f64 {
+    if a > b { return a }
+    return b
+}
+
+fn clamp(x: f64, lo: f64, hi: f64) -> f64 {
+    return max(lo, min(x, hi))
+}
+
+// Linear interpolation from a to b, t goes from 0 to 1.
+fn lerp(a: f64, b: f64, t: f64) -> f64 {
+    return a + (b - a) * t
+}
+
+fn abs_i(x: i64) -> i64 {
+    if x < 0 { return -x }
+    return x
+}
+
+fn min_i(a: i64, b: i64) -> i64 {
+    if a < b { return a }
+    return b
+}
+
+fn max_i(a: i64, b: i64) -> i64 {
+    if a > b { return a }
+    return b
+}
+
+fn clamp_i(x: i64, lo: i64, hi: i64) -> i64 {
+    return max_i(lo, min_i(x, hi))
+}
