@@ -1,0 +1,7 @@
+scores [1, 4, 9, 16, 25]
+count 5 last 25
+popped 25 now [1, 4, 9, 16]
+after remove and edit [100, 9, 16]
+enemies 3 total hp 355
+Enemy { name: "slime", hp: 5 }
+["ana", "bia", "caio"]

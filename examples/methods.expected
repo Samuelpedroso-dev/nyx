@@ -1,0 +1,5 @@
+length 5
+scaled Vec2 { x: 6, y: 8 }
+sum Vec2 { x: 7, y: 9 }
+Samuel hp 70 alive true
+Samuel hp 0 alive false

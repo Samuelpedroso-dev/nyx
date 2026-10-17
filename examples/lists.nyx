@@ -1,0 +1,41 @@
+// Dynamic lists that grow as you push.
+
+struct Enemy {
+    name: str,
+    hp: i64,
+}
+
+fn total_hp(enemies: [Enemy]) -> i64 {
+    var sum = 0
+    for e in enemies {
+        sum += e.hp
+    }
+    return sum
+}
+
+fn main() {
+    var scores: [i64] = []
+    for i in 1..6 {
+        scores.push(i * i)
+    }
+    print("scores", scores)
+    print("count", scores.len(), "last", scores[scores.len() - 1])
+
+    let top = scores.pop()
+    print("popped", top, "now", scores)
+
+    scores.remove(0)
+    scores[0] = 100
+    print("after remove and edit", scores)
+
+    var enemies: [Enemy] = [Enemy { name: "slime", hp: 20 }, Enemy { name: "goblin", hp: 35 }]
+    enemies.push(Enemy { name: "dragon", hp: 300 })
+    print("enemies", enemies.len(), "total hp", total_hp(enemies))
+
+    // Elements can be changed in place.
+    enemies[0].hp -= 15
+    print(enemies[0])
+
+    let names: [str] = ["ana", "bia", "caio"]
+    print(names)
+}

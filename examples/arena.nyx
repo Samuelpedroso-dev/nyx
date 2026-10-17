@@ -1,0 +1,70 @@
+// A small arena game simulation, everything Nyx 0.2 offers in one place.
+import "random"
+import "math"
+
+struct Fighter {
+    name: str,
+    hp: i64,
+    attack: i64,
+    wins: i64,
+}
+
+impl Fighter {
+    fn new(name: str, hp: i64, attack: i64) -> Fighter {
+        return Fighter { name: name, hp: hp, attack: attack, wins: 0 }
+    }
+
+    fn alive(self) -> bool {
+        return self.hp > 0
+    }
+
+    fn take(var self, damage: i64) {
+        self.hp = max_i(self.hp - damage, 0)
+    }
+}
+
+fn duel(a: Fighter, b: Fighter, rng: Rng) -> str {
+    var x = a
+    var y = b
+    var r = rng
+    var round = 1
+    while x.alive() && y.alive() {
+        y.take(r.range(1, x.attack + 1))
+        if y.alive() {
+            x.take(r.range(1, y.attack + 1))
+        }
+        round += 1
+    }
+    if x.alive() {
+        return x.name
+    }
+    return y.name
+}
+
+fn main() {
+    var rng = Rng.new(2026)
+    var roster: [Fighter] = [
+        Fighter.new("Nyx", 120, 18),
+        Fighter.new("Orion", 140, 14),
+        Fighter.new("Vega", 100, 22),
+    ]
+
+    for match in 0..30 {
+        let i = rng.range(0, roster.len())
+        var j = rng.range(0, roster.len())
+        if i == j {
+            j = (j + 1) % roster.len()
+        }
+        let winner = duel(roster[i], roster[j], Rng.new(rng.next()))
+        for k in 0..roster.len() {
+            if roster[k].name == winner {
+                roster[k].wins += 1
+            }
+        }
+    }
+
+    print("results after 30 matches")
+    for f in roster {
+        print("  " + f.name, "wins", f.wins)
+    }
+}

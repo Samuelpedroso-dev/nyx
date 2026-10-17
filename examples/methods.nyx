@@ -1,0 +1,57 @@
+// Methods on structs. 'self' reads a copy, 'var self' changes the original.
+import "math"
+
+struct Vec2 {
+    x: f64,
+    y: f64,
+}
+
+impl Vec2 {
+    fn new(x: f64, y: f64) -> Vec2 {
+        return Vec2 { x: x, y: y }
+    }
+
+    fn length(self) -> f64 {
+        return sqrt(self.x * self.x + self.y * self.y)
+    }
+
+    fn add(self, other: Vec2) -> Vec2 {
+        return Vec2.new(self.x + other.x, self.y + other.y)
+    }
+
+    fn scale(var self, k: f64) {
+        self.x *= k
+        self.y *= k
+    }
+}
+
+struct Player {
+    name: str,
+    pos: Vec2,
+    hp: i64,
+}
+
+impl Player {
+    fn hit(var self, damage: i64) {
+        self.hp = clamp_i(self.hp - damage, 0, 100)
+    }
+
+    fn alive(self) -> bool {
+        return self.hp > 0
+    }
+}
+
+fn main() {
+    var v = Vec2.new(3.0, 4.0)
+    print("length", v.length())
+    v.scale(2.0)
+    print("scaled", v)
+    print("sum", v.add(Vec2.new(1.0, 1.0)))
+
+    var p = Player { name: "Samuel", pos: Vec2.new(0.0, 0.0), hp: 100 }
+    p.hit(30)
+    p.pos.scale(10.0)
+    print(p.name, "hp", p.hp, "alive", p.alive())
+    p.hit(500)
+    print(p.name, "hp", p.hp, "alive", p.alive())
+}
