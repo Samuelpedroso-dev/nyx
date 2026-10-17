@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.c
+*.exe
+/hello
+/fib
+/bits
+/particles
+/sieve
+/math
