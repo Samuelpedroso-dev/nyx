@@ -34,10 +34,26 @@ ERROR_CASES = [
     ("bad cast", "fn main() { let s = \"a\" as i64 }", "cannot cast"),
     ("redeclared", "fn main() { let a = 1\n let a = 2 }", "already declared"),
     ("unterminated string", "fn main() { print(\"oops) }", "unterminated string"),
+    ("empty list without type", "fn main() { var xs = [] }", "empty list needs a type"),
+    ("push wrong type", "fn main() { var xs: [i64] = []\n xs.push(\"a\") }", "expected i64 but got str"),
+    ("string is immutable", "fn main() { let s = \"abc\"\n s[0] = 65 }", "strings are immutable"),
+    ("str plus int", "fn main() { let s = \"lvl \" + 3 }", "Convert with str(x)"),
+    ("var self on let", "struct C { n: i64 }\nimpl C { fn inc(var self) { self.n += 1 } }\n"
+                        "fn main() { let c = C { n: 0 }\n c.inc() }", "declare it with 'var'"),
+    ("modify self without var", "struct C { n: i64 }\nimpl C { fn inc(self) { self.n += 1 } }\nfn main() {}",
+     "use 'var self'"),
+    ("unknown method", "struct C { n: i64 }\nfn main() { let c = C { n: 0 }\n c.fly() }", "no method 'fly'"),
+    ("static called on value", "struct C { n: i64 }\nimpl C { fn make() -> C { return C { n: 1 } } }\n"
+                               "fn main() { let c = C { n: 0 }\n c.make() }", "static function"),
+    ("missing module", "import \"nothing_here\"\nfn main() {}", "cannot find module"),
+    ("loop over int", "fn main() { for x in 5 { print(x) } }", "cannot loop over"),
 ]
 
 RUNTIME_CASES = [
     ("bounds check", "fn main() { var a = [1, 2, 3]\n var i = 5\n a[i] = 0 }", "out of bounds", 101),
+    ("list bounds check", "fn main() { var xs: [i64] = [1]\n print(xs[3]) }", "out of bounds", 101),
+    ("pop empty list", "fn main() { var xs: [i64] = []\n print(xs.pop()) }", "empty list", 101),
+    ("substr range", "fn main() { print(\"abc\".substr(1, 9)) }", "substr range", 101),
 ]
 
 
